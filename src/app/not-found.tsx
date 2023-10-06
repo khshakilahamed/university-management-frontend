@@ -1,7 +1,18 @@
+import Image from "next/image";
+import notFoundImg from "./../assets/not-found.png";
+
 const NotFoundPage = () => {
   return (
     <div>
-      <h1>404!!! Page not found!</h1>
+      <Image
+        src={notFoundImg}
+        alt="page not found"
+        sizes="30vw"
+        style={{
+          width: "100%",
+          height: "100vh",
+        }}
+      />
     </div>
   );
 };
