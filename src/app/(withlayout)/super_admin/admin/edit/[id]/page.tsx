@@ -5,26 +5,25 @@ import FormDatePicker from "@/components/Forms/FormDatePicker";
 import FormInput from "@/components/Forms/FormInput";
 import FormSelectField from "@/components/Forms/FormSelectField";
 import FormTextArea from "@/components/Forms/FormTextArea";
+import ActionBar from "@/components/ui/ActionBar";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UploadImage from "@/components/ui/UploadImage";
 import { bloodGroupOptions, genderOptions } from "@/constants/global";
-import { useAddAdminWithFormDataMutation } from "@/redux/api/adminApi";
+import { useAdminQuery } from "@/redux/api/adminApi";
 import { useDepartmentsQuery } from "@/redux/api/departmentApi";
-import { adminSchema } from "@/schemas/admin";
-import { getUserInfo } from "@/services/auth.service";
-import { IDepartment } from "@/types";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Col, Row, message } from "antd";
-import React from "react";
 
-const CreateAdmin = () => {
-  const { role } = getUserInfo() as any;
+const EditAdmin = ({ params }: { params: any }) => {
+  const { id } = params;
 
-  const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
-  const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
+  const { data } = useAdminQuery(id);
+  const { data: departmentsData, isLoading } = useDepartmentsQuery({
+    limit: 100,
+    page: 1,
+  });
 
   //@ts-ignore
-  const departments: IDepartment[] = data?.departments;
+  const departments: IDepartment[] = departmentsData?.departments;
 
   const departmentOptions =
     departments &&
@@ -52,7 +51,7 @@ const CreateAdmin = () => {
     try {
       message.loading("Creating...");
       // console.log(values);
-      await addAdminWithFormData(formData);
+      //   await addAdminWithFormData(formData);
       message.success("Admin created successfully");
     } catch (error: any) {
       console.error(error.message);
@@ -74,10 +73,11 @@ const CreateAdmin = () => {
           },
         ]}
       />
-      <h1>Create Admin</h1>
+
+      <ActionBar title="Update Admin"></ActionBar>
 
       <div>
-        <Form submitHandler={onSubmit} resolver={yupResolver(adminSchema)}>
+        <Form submitHandler={onSubmit}>
           <div
             style={{
               border: "1px solid #d9d9d9",
@@ -313,7 +313,7 @@ const CreateAdmin = () => {
             </Row>
           </div>
           <Button htmlType="submit" type="primary">
-            Create
+            Submit
           </Button>
         </Form>
       </div>
@@ -321,4 +321,4 @@ const CreateAdmin = () => {
   );
 };
 
-export default CreateAdmin;
+export default EditAdmin;
