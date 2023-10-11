@@ -23,7 +23,7 @@ const StudentBasicInfo = () => {
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
           <FormInput
             type="email"
-            name="admin.email"
+            name="student.email"
             size="large"
             label="Email"
           />
@@ -31,7 +31,7 @@ const StudentBasicInfo = () => {
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
           <FormInput
             type="text"
-            name="admin.contactNumber"
+            name="student.contactNo"
             size="large"
             label="Contact No."
           />
@@ -39,14 +39,14 @@ const StudentBasicInfo = () => {
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
           <FormInput
             type="text"
-            name="admin.emergencyContactNo"
+            name="student.emergencyContactNo"
             size="large"
             label="Emergency Contact No."
           />
         </Col>
         <Col className="gutter-row" span={12} style={{ marginBottom: "10px" }}>
           <FormDatePicker
-            name="admin.dateOfBirth"
+            name="student.dateOfBirth"
             label="Date of Birth"
             size="large"
           />
@@ -54,7 +54,7 @@ const StudentBasicInfo = () => {
         <Col className="gutter-row" span={12} style={{ marginBottom: "10px" }}>
           <FormSelectField
             size="large"
-            name="admin.bloodGroup"
+            name="student.bloodGroup"
             options={bloodGroupOptions}
             label="Blood Group"
             placeholder="select"
@@ -63,14 +63,14 @@ const StudentBasicInfo = () => {
         <Col span={12} style={{ marginBottom: "10px 0" }}>
           <FormTextArea
             label="Present Address"
-            name="admin.presentAddress"
+            name="student.presentAddress"
             rows={4}
           />
         </Col>
         <Col span={12} style={{ marginBottom: "10px 0" }}>
           <FormTextArea
             label="Permanent Address"
-            name="admin.permanentAddress"
+            name="student.permanentAddress"
             rows={4}
           />
         </Col>

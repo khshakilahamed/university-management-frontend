@@ -1,5 +1,7 @@
 "use client";
 
+import ACDepartmentField from "@/components/Forms/ACDepartmentField";
+import ACFacultyField from "@/components/Forms/ACFacultyField";
 import Form from "@/components/Forms/Form";
 import FormDatePicker from "@/components/Forms/FormDatePicker";
 import FormInput from "@/components/Forms/FormInput";
@@ -8,34 +10,15 @@ import FormTextArea from "@/components/Forms/FormTextArea";
 import UMBreadCrumb from "@/components/ui/UMBreadCrumb";
 import UploadImage from "@/components/ui/UploadImage";
 import { bloodGroupOptions, genderOptions } from "@/constants/global";
-import { useAddAdminWithFormDataMutation } from "@/redux/api/adminApi";
-import { useDepartmentsQuery } from "@/redux/api/departmentApi";
-import { adminSchema } from "@/schemas/admin";
+import { useAddFacultyWithFormDataMutation } from "@/redux/api/facultyApi";
 import { getUserInfo } from "@/services/auth.service";
-import { IDepartment } from "@/types";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Col, Row, message } from "antd";
-import React from "react";
 
-const CreateAdmin = () => {
+const CreateFaculty = () => {
   const { role } = getUserInfo() as any;
+  const [addFacultyWithFormData] = useAddFacultyWithFormDataMutation();
 
-  const { data, isLoading } = useDepartmentsQuery({ limit: 100, page: 1 });
-  const [addAdminWithFormData] = useAddAdminWithFormDataMutation();
-
-  //@ts-ignore
-  const departments: IDepartment[] = data?.departments;
-
-  const departmentOptions =
-    departments &&
-    departments?.map((department) => {
-      return {
-        label: department?.title,
-        value: department?.id,
-      };
-    });
-
-  const onSubmit = async (values: any) => {
+  const adminOnSubmit = async (values: any) => {
     const obj = { ...values };
     const file = obj["file"];
 
@@ -47,16 +30,17 @@ const CreateAdmin = () => {
     formData.append("file", file as Blob);
     formData.append("data", data);
 
-    // console.log(values);
-
     try {
       message.loading("Creating...");
-      // console.log(values);
-      await addAdminWithFormData(formData);
-      message.success("Admin created successfully");
+      //   console.log(values);
+
+      const res = await addFacultyWithFormData(formData);
+
+      if (!!res) {
+        message.success("Faculty created successfully");
+      }
     } catch (error: any) {
       console.error(error.message);
-      message.error(error.message);
     }
   };
 
@@ -65,19 +49,19 @@ const CreateAdmin = () => {
       <UMBreadCrumb
         items={[
           {
-            label: "super_admin",
-            link: "/super_admin",
+            label: `${role}`,
+            link: `/${role}`,
           },
           {
-            label: "admin",
-            link: "/super_admin/admin",
+            label: "manage-faculty",
+            link: `/${role}/manage-faculty`,
           },
         ]}
       />
-      <h1>Create Admin</h1>
+      <h1>Create Faculty</h1>
 
       <div>
-        <Form submitHandler={onSubmit} resolver={yupResolver(adminSchema)}>
+        <Form submitHandler={adminOnSubmit}>
           <div
             style={{
               border: "1px solid #d9d9d9",
@@ -92,54 +76,54 @@ const CreateAdmin = () => {
                 marginBottom: "10px",
               }}
             >
-              Admin Information
+              Faculty Information
             </p>
             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col
                 className="gutter-row"
-                span={8}
+                span={6}
                 style={{
                   marginBottom: "10px",
                 }}
               >
                 <FormInput
                   type="text"
-                  name="admin.name.firstName"
+                  name="faculty.name.firstName"
                   size="large"
                   label="First Name"
                 />
               </Col>
               <Col
                 className="gutter-row"
-                span={8}
+                span={6}
                 style={{
                   marginBottom: "10px",
                 }}
               >
                 <FormInput
                   type="text"
-                  name="admin.name.middleName"
+                  name="faculty.name.middleName"
                   size="large"
                   label="Middle Name"
                 />
               </Col>
               <Col
                 className="gutter-row"
-                span={8}
+                span={6}
                 style={{
                   marginBottom: "10px",
                 }}
               >
                 <FormInput
                   type="text"
-                  name="admin.name.lastName"
+                  name="faculty.name.lastName"
                   size="large"
                   label="Last Name"
                 />
               </Col>
               <Col
                 className="gutter-row"
-                span={8}
+                span={6}
                 style={{
                   marginBottom: "10px",
                 }}
@@ -160,10 +144,21 @@ const CreateAdmin = () => {
               >
                 <FormSelectField
                   size="large"
-                  name="admin.gender"
+                  name="faculty.gender"
                   options={genderOptions}
                   label="Gender"
                   placeholder="Select"
+                />
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  marginBottom: "10px",
+                }}
+              >
+                <ACFacultyField
+                  name="faculty.academicFaculty"
+                  label="Academic Faculty"
                 />
               </Col>
               <Col
@@ -173,12 +168,9 @@ const CreateAdmin = () => {
                   marginBottom: "10px",
                 }}
               >
-                <FormSelectField
-                  size="large"
-                  name="admin.managementDepartment"
-                  options={departmentOptions}
-                  label="Department"
-                  placeholder="Select"
+                <ACDepartmentField
+                  name="faculty.academicDepartment"
+                  label="Academic Department"
                 />
               </Col>
               <Col
@@ -220,7 +212,7 @@ const CreateAdmin = () => {
               >
                 <FormInput
                   type="email"
-                  name="admin.email"
+                  name="faculty.email"
                   size="large"
                   label="Email address"
                 />
@@ -234,7 +226,7 @@ const CreateAdmin = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.contactNo"
+                  name="faculty.contactNo"
                   size="large"
                   label="Contact No."
                 />
@@ -248,7 +240,7 @@ const CreateAdmin = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.emergencyContactNo"
+                  name="faculty.emergencyContactNo"
                   size="large"
                   label="Emergency Contact No."
                 />
@@ -261,7 +253,7 @@ const CreateAdmin = () => {
                 }}
               >
                 <FormDatePicker
-                  name="admin.dateOfBirth"
+                  name="faculty.dateOfBirth"
                   label="Date of birth"
                   size="large"
                 />
@@ -275,7 +267,7 @@ const CreateAdmin = () => {
               >
                 <FormSelectField
                   size="large"
-                  name="admin.bloodGroup"
+                  name="faculty.bloodGroup"
                   options={bloodGroupOptions}
                   label="Blood group"
                   placeholder="Select"
@@ -290,14 +282,14 @@ const CreateAdmin = () => {
               >
                 <FormInput
                   type="text"
-                  name="admin.designation"
+                  name="faculty.designation"
                   size="large"
                   label="Designation"
                 />
               </Col>
               <Col span={12} style={{ margin: "10px 0" }}>
                 <FormTextArea
-                  name="admin.presentAddress"
+                  name="faculty.presentAddress"
                   label="Present address"
                   rows={4}
                 />
@@ -305,7 +297,7 @@ const CreateAdmin = () => {
 
               <Col span={12} style={{ margin: "10px 0" }}>
                 <FormTextArea
-                  name="admin.permanentAddress"
+                  name="faculty.permanentAddress"
                   label="Permanent address"
                   rows={4}
                 />
@@ -321,4 +313,4 @@ const CreateAdmin = () => {
   );
 };
 
-export default CreateAdmin;
+export default CreateFaculty;

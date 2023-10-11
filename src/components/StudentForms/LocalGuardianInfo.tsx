@@ -19,7 +19,7 @@ const LocalGuardianInfo = () => {
         <Col className="gutter-row" span={6} style={{ marginBottom: "10px" }}>
           <FormInput
             type="text"
-            name="student.localGuardian.fatherName"
+            name="student.localGuardian.name"
             size="large"
             label="Local Guardian Name"
           />

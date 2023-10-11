@@ -11,6 +11,9 @@ import {
   genderOptions,
 } from "@/constants/global";
 import UploadImage from "../ui/UploadImage";
+import ACDepartmentField from "../Forms/ACDepartmentField";
+import ACFacultyField from "../Forms/ACFacultyField";
+import ACSemesterField from "../Forms/ACSemesterField";
 
 const StudentInfo = () => {
   return (
@@ -57,30 +60,21 @@ const StudentInfo = () => {
           />
         </Col>
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
-          <FormSelectField
-            size="large"
+          <ACDepartmentField
             name="student.academicDepartment"
-            options={acDepartmentOptions}
             label="Academic Department"
-            placeholder="select"
           />
         </Col>
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
-          <FormSelectField
-            size="large"
+          <ACFacultyField
             name="student.academicFaculty"
-            options={facultyOptions}
             label="Academic Faculty"
-            placeholder="select"
           />
         </Col>
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
-          <FormSelectField
-            size="large"
+          <ACSemesterField
             name="student.academicSemester"
-            options={acSemesterOptions}
             label="Academic Semester"
-            placeholder="select"
           />
         </Col>
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
@@ -93,7 +87,7 @@ const StudentInfo = () => {
           />
         </Col>
         <Col className="gutter-row" span={8} style={{ marginBottom: "10px" }}>
-          <UploadImage />
+          <UploadImage name="file" />
         </Col>
       </Row>
     </div>
